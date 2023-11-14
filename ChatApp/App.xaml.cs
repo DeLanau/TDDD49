@@ -13,5 +13,11 @@ namespace ChatApp
     /// </summary>
     public partial class App : Application
     {
+        private void Main(Object Sender, StartupEventArgs e)
+        {
+            MainWindow main_window = new MainWindow();
+            main_window.Title = "Test";
+            main_window.Show();
+        }
     }
 }

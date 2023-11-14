@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,9 @@ namespace ChatApp
         public MainWindow()
         {
             InitializeComponent();
+
+            MainViewModel viewModel = new MainViewModel();
+            this.DataContext = viewModel;
         }
     }
 }

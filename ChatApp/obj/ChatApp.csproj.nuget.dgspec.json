@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mejse\\Downloads\\ChatApp\\ChatApp\\ChatApp\\ChatApp.csproj": {}
+    "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mejse\\Downloads\\ChatApp\\ChatApp\\ChatApp\\ChatApp.csproj": {
+    "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mejse\\Downloads\\ChatApp\\ChatApp\\ChatApp\\ChatApp.csproj",
+        "projectUniqueName": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj",
         "projectName": "ChatApp",
-        "projectPath": "C:\\Users\\mejse\\Downloads\\ChatApp\\ChatApp\\ChatApp\\ChatApp.csproj",
-        "packagesPath": "C:\\Users\\mejse\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mejse\\Downloads\\ChatApp\\ChatApp\\ChatApp\\obj\\",
+        "projectPath": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj",
+        "packagesPath": "C:\\Users\\nlakr\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\mejse\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\nlakr\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

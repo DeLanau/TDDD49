@@ -1,10 +1,19 @@
 {
   "runtimeOptions": {
     "tfm": "net7.0",
+    "frameworks": [
+      {
+        "name": "Microsoft.NETCore.App",
+        "version": "7.0.0"
+      },
+      {
+        "name": "Microsoft.WindowsDesktop.App",
+        "version": "7.0.0"
+      }
+    ],
     "additionalProbingPaths": [
-      "C:\\Users\\sahsa74\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\sahsa74\\.nuget\\packages",
-      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      "C:\\Users\\nlakr\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\nlakr\\.nuget\\packages"
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
