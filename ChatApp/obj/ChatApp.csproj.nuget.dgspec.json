@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj": {}
+    "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj": {
+    "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj",
+        "projectUniqueName": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
         "projectName": "ChatApp",
-        "projectPath": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj",
+        "projectPath": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
         "packagesPath": "C:\\Users\\nlakr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\obj\\",
+        "outputPath": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nlakr\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -39,6 +39,12 @@
       "frameworks": {
         "net7.0-windows7.0": {
           "targetAlias": "net7.0-windows",
+          "dependencies": {
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

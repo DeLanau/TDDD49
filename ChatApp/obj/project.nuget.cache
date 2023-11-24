@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "URFX5CuQFWklPe2o3i5aIwbXFn3HAmCi9kWLTIg4/NSxiPG9zXXOutYGrPCNdNCWH6AwjogcjAUYlkt4v8OfyQ==",
+  "dgSpecHash": "SgTmjJg8S+eiX04dJf5mxzHaRDJuualGt16woZCK4HEsbE3pHDV4/BVqhyjDjDHipHNndAPTQM5V1VplqcA5SA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\nlakr\\Source\\Repos\\tddd49\\ChatApp\\ChatApp.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\nlakr\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
