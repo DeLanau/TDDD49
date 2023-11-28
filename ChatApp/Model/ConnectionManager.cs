@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ChatApp.Model
@@ -74,7 +75,7 @@ namespace ChatApp.Model
             set 
             {
                 OnPropertyChanged("Disconnected");
-                //CloseConnection();
+                CloseConnection();
             }
         }
 
@@ -86,6 +87,144 @@ namespace ChatApp.Model
                 connected = value;
                 OnPropertyChanged("Connected");
             }
+        }
+
+        private bool declined;
+        public bool Declined
+        {
+            get { return declined; }
+            set
+            {
+                declined = value;
+                OnPropertyChanged("Declined");
+            }
+        }
+
+        public Data SendMessage(String msg)
+        {
+            Data j_msg = new Data()
+            {
+                RequestType = "message",
+                Date = DateTime.Now,
+                UserName = name,
+                Message = msg
+            };
+            sendJsonMessage(j_msg);
+            return j_msg;
+        }
+
+        void sendJsonMessage (Data msg) 
+        {
+            var j_msg = JsonSerializer.Serialize<Data>(msg);
+            var bytes = System.Text.Encoding.ASCII.GetBytes(j_msg);
+
+            if(stream != null)
+                stream.Write(bytes, 0, bytes.Length);
+        }
+
+        private Data receivedMessage;
+        public Data ReceivedMessage
+        {
+            get { return receivedMessage;}
+            set
+            {
+                receivedMessage = value;
+                if (otheruser == "")
+                    Otheruser = receivedMessage.UserName;
+                OnPropertyChanged("ReceivedMessage");
+            }
+        }
+
+        public void ConnectListener()
+        {
+            try
+            {
+                client = new TcpClient(address, port);
+                stream = client.GetStream();
+
+                Data connect_done = new Data()
+                {
+                    RequestType = "connectDone",
+                    Date = DateTime.Now,
+                    UserName = name,
+                    Message = ""
+                };
+
+                sendJsonMessage(connect_done);
+            }catch (ArgumentNullException e)
+            {
+                otheruser = "";
+            }catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally {
+                connected = true;
+                getMessage();
+            }
+        }
+
+        private void getMessage()
+        {
+            try
+            {
+               while(connected)
+                {
+                    if (client == null)
+                        break;
+
+                    var datab = new Byte[256];
+                    stream = client.GetStream();
+                    Int32 bytes = stream.Read(datab);
+                    var msg = System.Text.Encoding.ASCII.GetString(datab, 0, bytes);
+
+                    if(bytes > 0)
+                    {
+                        receivedMessage = JsonSerializer.Deserialize<Data>(msg);
+                        string request_type = receivedMessage.RequestType;
+
+                        switch (request_type)
+                        {
+
+                            case "message":
+                                ReceivedMessage = receivedMessage;
+                                break;
+                            case "connectDone":
+                                otheruser = receivedMessage.UserName;
+                                InConnection = true;
+                                break;
+                            case "connectDecline":
+                                Declined = true;
+                                break;
+                            case "buzz":
+                                OnPropertyChanged("buzz");
+                                break;
+                            case "connectAccept":
+                                Connected = true;
+                                break;
+                        }
+                        stream.Flush();
+                        if (Declined)
+                            break;
+                    }
+                }
+            }catch
+            {
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    Disconnected = true;
+                    CloseConnection();
+                });
+            }
+        }
+
+        private void CloseConnection()
+        {
+            if(client != null)
+                client.Close();
+
+            connected = false;
+            otheruser = "";
         }
 
         //TODO sendmsg, recievemsg, connect/start/disconnect/close connection

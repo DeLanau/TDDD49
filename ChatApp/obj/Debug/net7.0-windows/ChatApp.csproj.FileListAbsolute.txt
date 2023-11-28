@@ -38,3 +38,6 @@ C:\Users\nlakr\Source\Repos\tddd49\ChatApp\obj\Debug\net7.0-windows\refint\ChatA
 C:\Users\nlakr\Source\Repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.pdb
 C:\Users\nlakr\Source\Repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.genruntimeconfig.cache
 C:\Users\nlakr\Source\Repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ref\ChatApp.dll
+C:\Users\nlakr\source\repos\tddd49\ChatApp\bin\Debug\net7.0-windows\Newtonsoft.Json.dll
+C:\Users\nlakr\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.csproj.AssemblyReference.cache
+C:\Users\nlakr\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.csproj.CopyComplete
