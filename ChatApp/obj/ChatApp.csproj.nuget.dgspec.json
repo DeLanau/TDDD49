@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {}
+    "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {
+    "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
+        "projectUniqueName": "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
         "projectName": "ChatApp",
-        "projectPath": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
-        "packagesPath": "C:\\Users\\nlakr\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\nlakr\\source\\repos\\tddd49\\ChatApp\\obj\\",
+        "projectPath": "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
+        "packagesPath": "C:\\Users\\Nadim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\nlakr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Nadim\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -64,7 +64,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -218,6 +218,11 @@ namespace ChatApp.Model
             }
         }
 
+        public void DisconnectConnection()
+        {
+            CloseConnection();
+        }
+
         private void CloseConnection()
         {
             if(client != null)
@@ -226,7 +231,5 @@ namespace ChatApp.Model
             connected = false;
             otheruser = "";
         }
-
-        //TODO sendmsg, recievemsg, connect/start/disconnect/close connection
     }
 }
