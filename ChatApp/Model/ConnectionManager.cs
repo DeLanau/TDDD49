@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ChatApp.Model
 {
@@ -164,6 +166,7 @@ namespace ChatApp.Model
             }
         }
 
+        //listen stream of data for message. 
         private void getMessage()
         {
             try
@@ -216,6 +219,69 @@ namespace ChatApp.Model
                     CloseConnection();
                 });
             }
+        }
+
+        //init listener to default port 127.0.0.1
+        public void InitListener()
+        {
+            try
+            {
+                listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
+                listener.Start();
+                client = listener.AcceptTcpClient();
+                connected = true;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+
+                if (otheruser != null)
+                    otheruser = "";
+
+                listener.Stop();
+            }
+            getMessage();
+        }
+
+        public void SendBuzz()
+        {
+            Data msg = new Data()
+            {
+                RequestType = "buzz",
+                Date = DateTime.Now,
+                UserName = name,
+                Message = ""
+            };
+            sendJsonMessage(msg);
+        }
+
+        public void AcceptConnection()
+        {
+            Otheruser = receivedMessage.UserName;
+            connected = true;
+            inconnection = false;
+            Data msg = new Data()
+            {
+                RequestType = "connectAccept",
+                Date = DateTime.Now,
+                UserName = name,
+                Message = ""
+            };
+            sendJsonMessage(msg);
+            getMessage();
+        }
+
+        public void DeclineConnection()
+        {
+            Data msg = new Data()
+            {
+                RequestType = "connectDecline",
+                Date = DateTime.Now,
+                UserName = name,
+                Message = ""
+            };
+            sendJsonMessage(msg);
+            CloseConnection();
         }
 
         public void DisconnectConnection()

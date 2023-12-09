@@ -14,22 +14,24 @@ namespace ChatApp.ViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-
+        
         private string _sendMessage;
         private string _name;
-        private string status;
+        private string status; //handle status
 
+        //changeble var
         private string _changePort;
         private string _changeAddress;
 
         private string searchText;
 
         private ConnectionManager _connectionManager;
-        private Chat _activeChat = null;
+        private Chat _activeChat = null; //start with zero active chats
         private Data _latestMsg;
-        private Thread thread;
+        private Thread thread; 
         private DataManager _dataManager;
         
+        //update UI
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
@@ -39,6 +41,7 @@ namespace ChatApp.ViewModel
             }
         }
 
+        //auto update ui elements
         public ObservableCollection<Data>? ObservableMessage { get; set; }
         public List<Chat>? OldChat { get; set; }
         public ObservableCollection<Chat>? ObservableSearchChat { get; set; }
@@ -126,8 +129,17 @@ namespace ChatApp.ViewModel
         public void ConnectListener()
         {
             ObservableMessage.Clear();
-            Status = "Connecting to msg listener...";
+            Status = "Connecting";
             thread = new Thread(new ThreadStart(Connection.ConnectListener));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        public void InitListener()
+        {
+            Status = "Listening";
+            ObservableMessage.Clear();
+            thread = new Thread(new ThreadStart(Connection.InitListener));
             thread.IsBackground = true;
             thread.Start();
         }
