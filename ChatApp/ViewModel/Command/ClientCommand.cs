@@ -19,6 +19,11 @@ namespace ChatApp.ViewModel.Command
             set { _main = value; }
         }
 
+        public ClientCommand(MainViewModel main)
+        {
+            this.Main = main;
+        }
+
         public bool CanExecute(object? parameter)
         {
             return true;
@@ -26,7 +31,8 @@ namespace ChatApp.ViewModel.Command
 
         public void Execute(object? parameter)
         {
-            Main
+            Main.ConnectListener();
         }
+
     }
 }

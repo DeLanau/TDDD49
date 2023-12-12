@@ -12,7 +12,7 @@ namespace ChatApp.Model
         private string name;
         private string id;
         private DateTime date;
-        private List<Data> messages;
+        private List<MessageInfo> messages;
 
         public string Name
         { 
@@ -32,15 +32,15 @@ namespace ChatApp.Model
             set { date = value; }
         }
 
-        public List<Data> Messages
+        public List<MessageInfo> Messages
         {
             get { return messages; }
             set { messages = value; }
         }
 
-        public Chat(string name, Data message)
+        public Chat(string name, MessageInfo message)
         {
-            messages = new List<Data>();
+            messages = new List<MessageInfo>();
             messages.Add(message);
             this.Name = name;
             this.Id = DateTime.Now.ToString("yyyyMMddHHmmss");

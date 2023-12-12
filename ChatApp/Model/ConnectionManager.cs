@@ -102,9 +102,9 @@ namespace ChatApp.Model
             }
         }
 
-        public Data SendMessage(String msg)
+        public MessageInfo SendMessage(String msg)
         {
-            Data j_msg = new Data()
+            MessageInfo j_msg = new MessageInfo()
             {
                 RequestType = "message",
                 Date = DateTime.Now,
@@ -115,17 +115,17 @@ namespace ChatApp.Model
             return j_msg;
         }
 
-        void sendJsonMessage (Data msg) 
+        void sendJsonMessage (MessageInfo msg) 
         {
-            var j_msg = JsonSerializer.Serialize<Data>(msg);
+            var j_msg = JsonSerializer.Serialize<MessageInfo>(msg);
             var bytes = System.Text.Encoding.ASCII.GetBytes(j_msg);
 
             if(stream != null)
                 stream.Write(bytes, 0, bytes.Length);
         }
 
-        private Data receivedMessage;
-        public Data ReceivedMessage
+        private MessageInfo receivedMessage;
+        public MessageInfo ReceivedMessage
         {
             get { return receivedMessage;}
             set
@@ -144,7 +144,7 @@ namespace ChatApp.Model
                 client = new TcpClient(address, port);
                 stream = client.GetStream();
 
-                Data connect_done = new Data()
+                MessageInfo connect_done = new MessageInfo()
                 {
                     RequestType = "connectDone",
                     Date = DateTime.Now,
@@ -183,7 +183,7 @@ namespace ChatApp.Model
 
                     if(bytes > 0)
                     {
-                        receivedMessage = JsonSerializer.Deserialize<Data>(msg);
+                        receivedMessage = JsonSerializer.Deserialize<MessageInfo>(msg);
                         string request_type = receivedMessage.RequestType;
 
                         switch (request_type)
@@ -245,7 +245,7 @@ namespace ChatApp.Model
 
         public void SendBuzz()
         {
-            Data msg = new Data()
+            MessageInfo msg = new MessageInfo()
             {
                 RequestType = "buzz",
                 Date = DateTime.Now,
@@ -260,7 +260,7 @@ namespace ChatApp.Model
             Otheruser = receivedMessage.UserName;
             connected = true;
             inconnection = false;
-            Data msg = new Data()
+            MessageInfo msg = new MessageInfo()
             {
                 RequestType = "connectAccept",
                 Date = DateTime.Now,
@@ -273,7 +273,7 @@ namespace ChatApp.Model
 
         public void DeclineConnection()
         {
-            Data msg = new Data()
+            MessageInfo msg = new MessageInfo()
             {
                 RequestType = "connectDecline",
                 Date = DateTime.Now,

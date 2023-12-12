@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatApp.Model
 {
-    public class Data
+    public class MessageInfo
     {
         public string RequestType { get; set; }
         public DateTime Date { get; set; }
