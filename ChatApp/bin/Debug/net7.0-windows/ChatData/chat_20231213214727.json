@@ -1,0 +1,19 @@
+{
+  "Name": "",
+  "Id": "20231213214727",
+  "Date": "2023-12-13T21:47:27.4667167+01:00",
+  "Messages": [
+    {
+      "RequestType": "message",
+      "Date": "2023-12-13T21:47:27.4658918+01:00",
+      "UserName": "Elljo",
+      "Message": "123"
+    },
+    {
+      "RequestType": "message",
+      "Date": "2023-12-13T21:47:49.7775166+01:00",
+      "UserName": "Elljo",
+      "Message": "123"
+    }
+  ]
+}

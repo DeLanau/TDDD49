@@ -17,7 +17,7 @@ namespace ChatApp.Model
         TcpListener listener;
         NetworkStream stream;
 
-        int port = 3000;
+        int port = 5000;
         string address = "127.0.0.1";
         string name = "Elljo";
 
@@ -146,7 +146,7 @@ namespace ChatApp.Model
 
                 MessageInfo connect_done = new MessageInfo()
                 {
-                    RequestType = "connectDone",
+                    RequestType = "inConnection",
                     Date = DateTime.Now,
                     UserName = name,
                     Message = ""
@@ -156,14 +156,40 @@ namespace ChatApp.Model
             }catch (ArgumentNullException e)
             {
                 otheruser = "";
-            }catch (Exception e)
+            }catch (SocketException e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine("SocketException in Connect Done: {0}", e);
             }
             finally {
                 connected = true;
                 getMessage();
             }
+        }
+
+        //init listener to default port 127.0.0.1
+        public void InitListener()
+        {
+            try
+            {
+                listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
+                listener.Start();
+                client = listener.AcceptTcpClient();
+                connected = true;
+            }
+            catch (SocketException e)
+            {
+                MessageBox.Show(e.Message);
+
+               
+                otheruser = "";
+
+                listener.Stop();
+            }
+            finally
+            {
+                listener.Stop();
+            }
+            getMessage();
         }
 
         //listen stream of data for message. 
@@ -186,29 +212,28 @@ namespace ChatApp.Model
                         receivedMessage = JsonSerializer.Deserialize<MessageInfo>(msg);
                         string request_type = receivedMessage.RequestType;
 
-                        switch (request_type)
+                        if(request_type == "message")
                         {
-
-                            case "message":
-                                ReceivedMessage = receivedMessage;
-                                break;
-                            case "connectDone":
-                                otheruser = receivedMessage.UserName;
-                                InConnection = true;
-                                break;
-                            case "connectDecline":
-                                Declined = true;
-                                break;
-                            case "buzz":
-                                OnPropertyChanged("buzz");
-                                break;
-                            case "connectAccept":
-                                Connected = true;
-                                break;
+                            ReceivedMessage = receivedMessage;
+                        }
+                        else if (request_type == "inConnection")
+                        {
+                            otheruser = receivedMessage.UserName;
+                            InConnection = true;
+                        }
+                        else if (request_type == "connectDecline")
+                        {
+                            Declined = true;
+                        }
+                        else if (request_type == "buzz")
+                        {
+                            OnPropertyChanged("buzz");
+                        }
+                        else if(request_type == "connectAccept")
+                        {
+                            Connected = true;
                         }
                         stream.Flush();
-                        if (Declined)
-                            break;
                     }
                 }
             }catch
@@ -219,28 +244,6 @@ namespace ChatApp.Model
                     CloseConnection();
                 });
             }
-        }
-
-        //init listener to default port 127.0.0.1
-        public void InitListener()
-        {
-            try
-            {
-                listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
-                listener.Start();
-                client = listener.AcceptTcpClient();
-                connected = true;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-
-                if (otheruser != null)
-                    otheruser = "";
-
-                listener.Stop();
-            }
-            getMessage();
         }
 
         public void SendBuzz()
@@ -280,6 +283,9 @@ namespace ChatApp.Model
                 UserName = name,
                 Message = ""
             };
+
+            stream = client.GetStream();
+
             sendJsonMessage(msg);
             CloseConnection();
         }

@@ -64,3 +64,4 @@ C:\Users\Nadim\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\refint\ChatA
 C:\Users\Nadim\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.pdb
 C:\Users\Nadim\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ChatApp.genruntimeconfig.cache
 C:\Users\Nadim\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\ref\ChatApp.dll
+C:\Users\Nadim\source\repos\tddd49\ChatApp\obj\Debug\net7.0-windows\App.baml

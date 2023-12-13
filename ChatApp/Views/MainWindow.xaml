@@ -5,8 +5,156 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Chat App" Height="450" Width="800">
+
     <Grid>
 
+        <TabControl>
+
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabPanel}">
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                </Style>
+
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Border BorderBrush="#AFC8AD" BorderThickness="0" CornerRadius="7" Margin="4" Padding="3" Background="#AFC8AD">
+                                    <ContentPresenter ContentSource="Header" TextElement.FontSize="18" TextElement.FontFamily="Arial"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </TabControl.Resources>
+
+
+            <TabItem Header="Connect">
+
+                <Grid Margin="0, 20, 0, 0">
+
+                    <Grid.Resources>
+
+                        <Style TargetType="Border">
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="CornerRadius" Value="5"/>
+                            <Setter Property="Width" Value="180" />
+                            <Setter Property="Background" Value="#88AB8E" />
+                        </Style>
+
+                        <Style TargetType="TextBox">
+                            <Setter Property="VerticalAlignment" Value="Center" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                            <Setter Property="TextWrapping" Value="Wrap" />
+                            <Setter Property="Width" Value="150" />
+                        </Style>
+
+                        <Style TargetType="Label">
+                            <Setter Property="TextElement.FontSize" Value="18" />
+                            <Setter Property="VerticalAlignment" Value="Top" />
+                            <Setter Property="HorizontalAlignment" Value="Center" />
+                        </Style>
+
+                    </Grid.Resources>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Grid.Column="1"/>
+                    <Label Grid.Row="0" Grid.Column="1" Content="Username" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Name}" />
+
+                    <Border Grid.Row="0" Grid.Column="2" />
+                    <Label Grid.Row="0"  Grid.Column="2" Content="IP-Adress" />
+                    <TextBox Grid.Row="0"  Grid.Column="2" Text="{Binding Path=Address}" />
+
+                    <Border Grid.Row="0" Grid.Column="3" />
+                    <Label Grid.Row="0"  Grid.Column="3" Content="Port" />
+                    <TextBox Grid.Row="0"  Grid.Column="3" Text="{Binding Path=Port}" />
+
+                    <Button Grid.Row="2" Grid.Column="1" Height="50" Width="150" Command="{Binding ListenerCmd}">Listen Port</Button>
+                    <Button Grid.Row="2" Grid.Column="3" Height="50" Width="150" Command="{Binding ClientCmd}">Connect</Button>
+
+                    <Label Grid.Row="1" Grid.Column="2" Content="{Binding Path=Status}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+                </Grid>
+
+            </TabItem>
+
+            <TabItem Header="Chat" >
+                <Grid Margin="-10, -3, 0, 0" Width="600" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="179*"/>
+                        <ColumnDefinition Width="223*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="5*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <ListBox Grid.Row="0" ItemsSource="{Binding Path=ObservableMessage}"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        ScrollViewer.CanContentScroll="False"
+                        Height="330" Width="600" Grid.ColumnSpan="2" Margin="7,0,7,64" Grid.RowSpan="2">
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
+                                    <Grid Width="400"
+                                            Height="50" Background="#88AB8E">
+                                        <StackPanel>
+                                            <TextBlock Grid.Row="0" Text="{Binding UserName}" VerticalAlignment="Center" Margin="20 0">
+                                            </TextBlock>
+                                            <TextBlock Grid.Row="1" Text="{Binding Date}" VerticalAlignment="Center" Margin="20 0">
+                                            </TextBlock>
+                                            <TextBlock Grid.Row="2" Text="{Binding Message}" VerticalAlignment="Center" Margin="20 0">
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                    </ListBox>
+                    
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                            <ColumnDefinition Width="4*"></ColumnDefinition>
+                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Margin="10,0,0,0" Grid.Column="0" Command="{Binding SendBuzzCmd}">Send Buzz</Button>
+                        <TextBox BorderThickness="2" Grid.Column="1" Text="{Binding Path=OutMessage}"></TextBox>
+                        <Button  Grid.Column="2" Command="{Binding SendMsgCmd}">Send Message</Button>
+
+
+                    </Grid>
+                    <!-- History -->
+                    
+
+                </Grid>
+
+            </TabItem>
+             
+        </TabControl>
     </Grid>
+
 </Window>

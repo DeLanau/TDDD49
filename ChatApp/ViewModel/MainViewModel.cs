@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ChatApp.Model;
+using ChatApp.ViewModel.Command;
 
 namespace ChatApp.ViewModel
 {
@@ -23,7 +29,7 @@ namespace ChatApp.ViewModel
 
         private string searchText;
 
-        private ConnectionManager _connectionManager;
+        private ConnectionManager _connection;
         private DataManager _dataManager;
 
         private MessageInfo _latestMsg;
@@ -53,8 +59,8 @@ namespace ChatApp.ViewModel
         public ObservableCollection<MessageInfo>? ObservableOldChat { get; set; }
         public ConnectionManager Connection
         {
-            get { return _connectionManager; }
-            set { _connectionManager = value; }
+            get { return _connection; }
+            set { _connection = value; }
         }
 
         public string Status
@@ -123,6 +129,42 @@ namespace ChatApp.ViewModel
             set { _dataManager = value; }
         }
 
+        public ICommand ListenerCmd
+        {
+            get { return _listenercmd; }
+            set { _listenercmd = value; }
+        }
+
+        public ICommand ClientCmd
+        { 
+            get { return _clientcmd; } 
+            set { _clientcmd = value; }
+        }
+
+        public ICommand SendMsgCmd
+        {
+            get { return _sendmsgcmd; }
+            set { _sendmsgcmd = value; }
+        }
+
+        public ICommand SendBuzzCmd
+        {
+            get { return _sendbuzzcmd; }
+            set { _sendbuzzcmd = value; }
+        }
+
+        public ICommand ShowChatCmd
+        {
+            get { return _showchatcmd; }
+            set { _showchatcmd = value; }
+        }
+
+        public ICommand SearchCmd
+        {
+            get { return _searchcmd; }
+            set { _searchcmd = value; }
+        }
+
         public MainViewModel()
         {
 
@@ -133,6 +175,24 @@ namespace ChatApp.ViewModel
 
             this.DataManager = new DataManager();
             this.Connection = new ConnectionManager();
+            this.ListenerCmd = new ListenerCommand(this);
+            this.ClientCmd = new ClientCommand(this);
+            this.SendMsgCmd = new SendMessageCommand(this);
+            this.SendBuzzCmd = new SendBuzzCommand(this);
+            this.ShowChatCmd = new ShowChatCommand(this);
+            this.SearchCmd = new SearchCommand(this);
+            this.ObservableMessage = new ObservableCollection<MessageInfo>();
+            this.OldChat = new List<Chat>(GetHistory());
+            this.ObservableOldChat = new ObservableCollection<MessageInfo>();
+            this.ObservableSearchChat = new ObservableCollection<Chat>(OldChat);
+            this.Connection.PropertyChanged += updateProperty;
+            Port = "3000";
+            Address = "127.0.0.1";
+
+            Debug.WriteLine("Test!!!");
+            if (OldChat.Count > 0)
+                DisplayChat(DataManager.GetHistory().First());
+
         }
 
         //listeners
@@ -148,6 +208,12 @@ namespace ChatApp.ViewModel
 
         public void InitListener()
         {
+            if(Connection.connected)
+            {
+                MessageBox.Show("Already Listening");
+                return;
+            }
+
             Status = "Listening";
             ObservableMessage.Clear();
             thread = new Thread(new ThreadStart(Connection.InitListener));
@@ -217,6 +283,8 @@ namespace ChatApp.ViewModel
 
             MessageInfo msg = Connection.SendMessage(OutMessage);
             DisplayMessageOnScreen(msg);
+            OutMessage = string.Empty;
+            OnPropertyChanged(nameof(OutMessage));
         }
 
         private void DisplayMessageOnScreen(MessageInfo msg)
@@ -269,5 +337,56 @@ namespace ChatApp.ViewModel
             Status = "Disconnected";
         }
 
+        //update property
+        private void updateProperty(object sender, PropertyChangedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("in update");
+
+            var prop = e.PropertyName;
+
+            System.Diagnostics.Debug.WriteLine(e.PropertyName);
+
+            if (e.PropertyName == "ReceivedMessage")
+            {
+                System.Diagnostics.Debug.WriteLine("in switch");
+                ReceivedMessage();
+                Debug.WriteLine("after");
+                Status = "Connected";
+            }
+            else if (e.PropertyName == "InConnection")
+            {
+                System.Diagnostics.Debug.WriteLine("in if connection");
+                MessageBoxResult result = MessageBox.Show("Accept incoming connection from " + Connection.otheruser + "?", "Incoming Connection", MessageBoxButton.YesNo);
+
+                System.Diagnostics.Debug.WriteLine("let's go");
+                if (result == MessageBoxResult.Yes)
+                {
+                    AcceptConnection();
+                }
+                else
+                {
+                    DeclineConnection();
+                }
+            }
+            else if (prop == "Disconnected")
+            {
+                MessageBox.Show(Connection.otheruser + " disconnected");
+                OldChat = DataManager.GetHistory();
+                Status = "Not connected";
+            }
+            else if (prop == "buzz")
+            {
+                SystemSounds.Beep.Play();
+            }
+            else if (prop == "connectDecline")
+            {
+                MessageBox.Show("Listener declined your invitation");
+                Status = "Not connected";
+            }
+            else if (prop == "connectAccept")
+            {
+                Status = "Connected";
+            }
+        }
     }
 }
