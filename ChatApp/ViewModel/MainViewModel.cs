@@ -107,7 +107,8 @@ namespace ChatApp.ViewModel
             set
             {
                 _name = value;
-                OnPropertyChanged();
+                Connection.Name = value;
+                OnPropertyChanged(nameof(value));
             }
         }
 
@@ -377,6 +378,36 @@ namespace ChatApp.ViewModel
             else if (prop == "buzz")
             {
                 SystemSounds.Beep.Play();
+
+                var window = Application.Current.MainWindow;
+
+                if (window != null)
+                {
+                    const int shakeIntensity = 5; // Intensitet av skakning
+
+                    Random random = new Random();
+                    const int shakeCount = 20; // Antal skakningar
+                    const int shakeDuration = 20; // Tid i millisekunder för varje skakning
+
+                    double originalLeft = window.Left;
+                    double originalTop = window.Top;
+
+                    for (int i = 0; i < shakeCount; i++)
+                    {
+                        double offsetX = random.Next(-shakeIntensity, shakeIntensity + 1);
+                        double offsetY = random.Next(-shakeIntensity, shakeIntensity + 1);
+
+                        window.Left = originalLeft + offsetX;
+                        window.Top = originalTop + offsetY;
+
+                        System.Threading.Thread.Sleep(shakeDuration);
+                    }
+
+                    // Återställ fönstrets position efter skakningen
+                    window.Left = originalLeft;
+                    window.Top = originalTop;
+                }
+
             }
             else if (prop == "connectDecline")
             {

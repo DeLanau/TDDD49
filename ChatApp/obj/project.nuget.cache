@@ -1,10 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "yRy4AC/3mwjtE9L92thFgphBvhz4PnctemwfUj/65l5rKwMEmJs/ZFgqbb6BYOdHs44SGrUzFB4+dKsPs3KM4A==",
+  "dgSpecHash": "I1y7OjApgjs7k94xxNZHih0SNv7ral5XMiDQDrubW+40/svv7NhIzIWaKO9UufDoapVvw1IjCunycaabUaK54A==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nadim\\source\\repos\\tddd49\\ChatApp\\ChatApp.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Nadim\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+    "C:\\Users\\Nadim\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Nadim\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.14\\microsoft.windowsdesktop.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Nadim\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.14\\microsoft.netcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Nadim\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.14\\microsoft.aspnetcore.app.ref.7.0.14.nupkg.sha512",
+    "C:\\Users\\Nadim\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.14\\microsoft.netcore.app.host.win-x64.7.0.14.nupkg.sha512"
   ],
   "logs": []
 }

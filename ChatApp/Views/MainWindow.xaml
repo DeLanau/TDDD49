@@ -95,14 +95,9 @@
                 </Grid>
 
             </TabItem>
-
-            <TabItem Header="Chat" >
+            
+            <TabItem Header="Chat">
                 <Grid Margin="-10, -3, 0, 0" Width="600" HorizontalAlignment="Right">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="179*"/>
-                        <ColumnDefinition Width="223*"/>
-                    </Grid.ColumnDefinitions>
-
                     <Grid.RowDefinitions>
                         <RowDefinition Height="5*"></RowDefinition>
                         <RowDefinition Height="1*"></RowDefinition>
@@ -115,15 +110,15 @@
 
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10">
-                                    <Grid Width="400"
-                                            Height="50" Background="#88AB8E">
-                                        <StackPanel>
-                                            <TextBlock Grid.Row="0" Text="{Binding UserName}" VerticalAlignment="Center" Margin="20 0">
+                                <Border BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="20, 0">
+                                    <Grid Width="550"
+                                            Height="50" Background="#88AB8E" >
+                                        <StackPanel Margin="20, 0">
+                                            <TextBlock Grid.Row="0" Text="{Binding UserName}" VerticalAlignment="Center">
                                             </TextBlock>
-                                            <TextBlock Grid.Row="1" Text="{Binding Date}" VerticalAlignment="Center" Margin="20 0">
+                                            <TextBlock Grid.Row="1" Text="{Binding Date}" VerticalAlignment="Center">
                                             </TextBlock>
-                                            <TextBlock Grid.Row="2" Text="{Binding Message}" VerticalAlignment="Center" Margin="20 0">
+                                            <TextBlock Grid.Row="2" Text="{Binding Message}" VerticalAlignment="Center">
                                             </TextBlock>
                                         </StackPanel>
 
@@ -136,14 +131,14 @@
                     
                     <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                            <ColumnDefinition Width="4*"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="3*"></ColumnDefinition>
                             <ColumnDefinition Width="1*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <Button Margin="10,0,0,0" Grid.Column="0" Command="{Binding SendBuzzCmd}">Send Buzz</Button>
+                        <Button Margin="7,5,5,5" Grid.Column="0" Command="{Binding SendBuzzCmd}">Buzz</Button>
                         <TextBox BorderThickness="2" Grid.Column="1" Text="{Binding Path=OutMessage}"></TextBox>
-                        <Button  Grid.Column="2" Command="{Binding SendMsgCmd}">Send Message</Button>
+                        <Button Margin="5" Grid.Column="2" Command="{Binding SendMsgCmd}">Send</Button>
 
 
                     </Grid>

@@ -19,7 +19,7 @@ namespace ChatApp.Model
 
         int port = 5000;
         string address = "127.0.0.1";
-        string name = "Elljo";
+        string name = "Namn";
 
         public string otheruser = "";
         public bool connected = false;
@@ -146,7 +146,7 @@ namespace ChatApp.Model
 
                 MessageInfo connect_done = new MessageInfo()
                 {
-                    RequestType = "inConnection",
+                    RequestType = "InConnection",
                     Date = DateTime.Now,
                     UserName = name,
                     Message = ""
@@ -216,7 +216,7 @@ namespace ChatApp.Model
                         {
                             ReceivedMessage = receivedMessage;
                         }
-                        else if (request_type == "inConnection")
+                        else if (request_type == "InConnection")
                         {
                             otheruser = receivedMessage.UserName;
                             InConnection = true;

@@ -43,7 +43,7 @@ namespace ChatApp.Model
             messages = new List<MessageInfo>();
             messages.Add(message);
             this.Name = name;
-            this.Id = DateTime.Now.ToString("yyyyMMddHHmmss");
+            this.Id = name + DateTime.Now.ToString("yyyyMMddHHmmss");
             this.Date = DateTime.Now;
         }
     }
