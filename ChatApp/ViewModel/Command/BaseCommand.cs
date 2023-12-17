@@ -9,12 +9,17 @@ namespace ChatApp.ViewModel.Command
 {
     public abstract class BaseCommand : ICommand
     {
-        protected MainViewModel _main;
-        
+
         public event EventHandler? CanExecuteChanged;
 
-        public bool CanExecute(object? parameter) => true;
+        protected MainViewModel _main;
+       
+        protected BaseCommand(MainViewModel main)
+        {
+            _main = main;
+        }
 
+        public bool CanExecute(object? parameter) => true;
 
         public abstract void Execute(object? parameter);
         
@@ -23,9 +28,5 @@ namespace ChatApp.ViewModel.Command
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected BaseCommand(MainViewModel main) 
-        { 
-            _main = main;
-        }
     }
 }

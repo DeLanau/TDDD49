@@ -221,7 +221,7 @@ namespace ChatApp.Model
             try
             {
                 //testar alltid på 127.0.0.1
-                listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
+                listener = new TcpListener(IPAddress.Parse(address), port);
                 listener.Start();
                 client = listener.AcceptTcpClient();
                 connected = true;

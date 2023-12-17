@@ -39,7 +39,7 @@ namespace ChatApp.ViewModel
         private Chat _activeChat = null; //start with zero active chats
         private Thread thread;
 
-        //commands
+        //commands 
         public ICommand ListenerCmd { get; set; }
         public ICommand ClientCmd { get; set; }
         public ICommand SendMsgCmd { get; set; }
@@ -150,14 +150,14 @@ namespace ChatApp.ViewModel
 
             Status = "Not Connected";
 
-            this.DataManager = new DataManager();
-            this.Connection = new ConnectionManager();
+            DataManager = new DataManager();
+            Connection = new ConnectionManager();
            
             InitCommands();
 
             InitObservables();
 
-            this.Connection.PropertyChanged += updateProperty;
+            Connection.PropertyChanged += updateProperty;
 
             Port = "3000";
             Address = "127.0.0.1";
@@ -272,7 +272,7 @@ namespace ChatApp.ViewModel
             IEnumerable<Chat> chatList = OldChat
                 .Where(c => c.Name.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0)
                 .OrderByDescending(c => c.Date);
-
+            
             ObservableSearchChat.Clear();
 
             App.Current.Dispatcher.Invoke((System.Action)delegate
@@ -352,13 +352,13 @@ namespace ChatApp.ViewModel
         {
             var prop = e.PropertyName;
             
-            if (e.PropertyName == "ReceivedMessage")
+            if (prop == "ReceivedMessage")
             {
                // System.Diagnostics.Debug.WriteLine("in switch");
                 ReceivedMessage();
                 Status = "Connected";
             }
-            else if (e.PropertyName == "InConnection")
+            else if (prop == "InConnection")
             {
                 MessageBoxResult result = MessageBox.Show("Accept incoming connection from " + Connection.otheruser + "?", "Incoming Connection", MessageBoxButton.YesNo);
 
