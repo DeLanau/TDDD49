@@ -29,10 +29,36 @@ namespace ChatApp.ViewModel.Command
             return true;
         }
 
+
+        private object? _oldParameter = null;
+        private int _parameterPressCount = 0;
         public void Execute(object? parameter)
         {
             if (parameter != null)
-                Main.DisplayChat((Chat)parameter);
+            {
+                if (_oldParameter != null && _oldParameter.Equals(parameter))
+                {
+                    _parameterPressCount++;
+                    if (_parameterPressCount >= 3)
+                    {
+                        _parameterPressCount = 0;
+                        Main.DisplayChat((Chat)parameter);
+                        Main.DisplayOldChat = System.Windows.Visibility.Visible;
+                    }
+                    else
+                    {
+                        Main.DisplayOldChat = System.Windows.Visibility.Collapsed;
+                    }
+                }
+                else
+                {
+                    _parameterPressCount = 1;
+                    Main.DisplayChat((Chat)parameter);
+                    Main.DisplayOldChat = System.Windows.Visibility.Visible;
+                }
+                _oldParameter = parameter;
+            }
+
         }
     }
 }

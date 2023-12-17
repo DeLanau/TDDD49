@@ -67,6 +67,7 @@ namespace ChatApp.Model
             set 
             {  
                 inconnection = value;
+      
                 OnPropertyChanged("InConnection");
             }
         }
@@ -115,12 +116,13 @@ namespace ChatApp.Model
             return j_msg;
         }
 
+        //send msg to stream
         void sendJsonMessage (MessageInfo msg) 
         {
             var j_msg = JsonSerializer.Serialize<MessageInfo>(msg);
             var bytes = System.Text.Encoding.ASCII.GetBytes(j_msg);
 
-            if(stream != null)
+            if (stream != null)
                 stream.Write(bytes, 0, bytes.Length);
         }
 
@@ -171,6 +173,7 @@ namespace ChatApp.Model
         {
             try
             {
+                //testar alltid på 127.0.0.1
                 listener = new TcpListener(IPAddress.Parse("127.0.0.1"), port);
                 listener.Start();
                 client = listener.AcceptTcpClient();

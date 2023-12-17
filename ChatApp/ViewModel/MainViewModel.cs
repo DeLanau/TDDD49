@@ -5,7 +5,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Media;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows;
@@ -61,6 +64,28 @@ namespace ChatApp.ViewModel
         {
             get { return _connection; }
             set { _connection = value; }
+        }
+
+        private int _viewTabId = 0;
+        public int ViewTabId
+        {
+            get { return _viewTabId; }
+            set
+            {
+                _viewTabId = value;
+                OnPropertyChanged(nameof(ViewTabId));
+            }
+        }
+
+        private Visibility _displayOldChat = Visibility.Collapsed;
+        public Visibility DisplayOldChat
+        {
+            get { return _displayOldChat; }
+            set
+            {
+                _displayOldChat = value;
+                OnPropertyChanged(nameof(DisplayOldChat));
+            }
         }
 
         public string Status
@@ -157,7 +182,9 @@ namespace ChatApp.ViewModel
         public ICommand ShowChatCmd
         {
             get { return _showchatcmd; }
-            set { _showchatcmd = value; }
+            set {
+                _showchatcmd = value;
+            }
         }
 
         public ICommand SearchCmd
@@ -182,18 +209,18 @@ namespace ChatApp.ViewModel
             this.SendBuzzCmd = new SendBuzzCommand(this);
             this.ShowChatCmd = new ShowChatCommand(this);
             this.SearchCmd = new SearchCommand(this);
+
             this.ObservableMessage = new ObservableCollection<MessageInfo>();
             this.OldChat = new List<Chat>(GetHistory());
             this.ObservableOldChat = new ObservableCollection<MessageInfo>();
             this.ObservableSearchChat = new ObservableCollection<Chat>(OldChat);
             this.Connection.PropertyChanged += updateProperty;
+
             Port = "3000";
             Address = "127.0.0.1";
 
-            Debug.WriteLine("Test!!!");
-            if (OldChat.Count > 0)
+            if (OldChat.Count >= 0)
                 DisplayChat(DataManager.GetHistory().First());
-
         }
 
         //listeners
@@ -202,9 +229,33 @@ namespace ChatApp.ViewModel
         {
             ObservableMessage.Clear();
             Status = "Connecting";
+
+            if (!check_port())
+            {
+                Status = "Not Connected";
+                MessageBox.Show("No server on this port");
+                return;
+            }
+
             thread = new Thread(new ThreadStart(Connection.ConnectListener));
             thread.IsBackground = true;
             thread.Start();
+
+            Status = "Connected";
+        }
+
+        private bool check_port()
+        {
+            try
+            {
+                TcpListener l = new TcpListener(IPAddress.Parse(Address), int.Parse(Port));
+                l.Start();
+                l.Stop();
+                return false;
+            } catch (SocketException e)
+            {
+                return true;
+            }
         }
 
         public void InitListener()
@@ -243,16 +294,13 @@ namespace ChatApp.ViewModel
 
         public void DisplayChat(Chat chat)
         {
-            if (OldChat.Count == 0) return;
+            if (OldChat.Count == 0 || chat == null) return;
 
             ObservableOldChat.Clear();
 
-            Chat temp = chat;
-            if (temp != null) return;
-
             App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
-                    foreach (var msg in temp.Messages)
+                    foreach (var msg in chat.Messages)
                     {
                         ObservableOldChat.Add(msg);
                     }
@@ -324,6 +372,7 @@ namespace ChatApp.ViewModel
             thread.IsBackground = true;
             thread.Start();
             Status = "Connected";
+            ViewTabId = 1;
         }
 
         public void DeclineConnection()
@@ -341,25 +390,18 @@ namespace ChatApp.ViewModel
         //update property
         private void updateProperty(object sender, PropertyChangedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("in update");
-
             var prop = e.PropertyName;
-
-            System.Diagnostics.Debug.WriteLine(e.PropertyName);
 
             if (e.PropertyName == "ReceivedMessage")
             {
-                System.Diagnostics.Debug.WriteLine("in switch");
+               // System.Diagnostics.Debug.WriteLine("in switch");
                 ReceivedMessage();
-                Debug.WriteLine("after");
                 Status = "Connected";
             }
             else if (e.PropertyName == "InConnection")
             {
-                System.Diagnostics.Debug.WriteLine("in if connection");
                 MessageBoxResult result = MessageBox.Show("Accept incoming connection from " + Connection.otheruser + "?", "Incoming Connection", MessageBoxButton.YesNo);
 
-                System.Diagnostics.Debug.WriteLine("let's go");
                 if (result == MessageBoxResult.Yes)
                 {
                     AcceptConnection();
@@ -369,54 +411,60 @@ namespace ChatApp.ViewModel
                     DeclineConnection();
                 }
             }
-            else if (prop == "Disconnected")
+            else if (prop == "Disconnected" && !Connection.connected)
             {
-                MessageBox.Show(Connection.otheruser + " disconnected");
+               // System.Diagnostics.Debug.WriteLine(check);            
+                MessageBox.Show("Client has been disconnected");
+    
+                //  MessageBox.Show("You disconnected");
                 OldChat = DataManager.GetHistory();
                 Status = "Not connected";
             }
             else if (prop == "buzz")
             {
                 SystemSounds.Beep.Play();
-
-                var window = Application.Current.MainWindow;
-
-                if (window != null)
+                    //fix buzz, lägger den i dispatcher kö istället first second -> second disconect | first <- second har blivit disc | first diconected  | <- second e discont
+                Application.Current.Dispatcher.Invoke(() =>
                 {
-                    const int shakeIntensity = 5; // Intensitet av skakning
+                    var window = Application.Current.MainWindow;
 
-                    Random random = new Random();
-                    const int shakeCount = 20; // Antal skakningar
-                    const int shakeDuration = 20; // Tid i millisekunder för varje skakning
-
-                    double originalLeft = window.Left;
-                    double originalTop = window.Top;
-
-                    for (int i = 0; i < shakeCount; i++)
+                    if (window != null)
                     {
-                        double offsetX = random.Next(-shakeIntensity, shakeIntensity + 1);
-                        double offsetY = random.Next(-shakeIntensity, shakeIntensity + 1);
+                        const int shakeIntensity = 5; // Intensitet av skakning
 
-                        window.Left = originalLeft + offsetX;
-                        window.Top = originalTop + offsetY;
+                        Random random = new Random();
+                        const int shakeCount = 20; // Antal skakningar
+                        const int shakeDuration = 20; // Tid i millisekunder för varje skakning
 
-                        System.Threading.Thread.Sleep(shakeDuration);
+                        double originalLeft = window.Left;
+                        double originalTop = window.Top;
+
+                        for (int i = 0; i < shakeCount; i++)
+                        {
+                            double offsetX = random.Next(-shakeIntensity, shakeIntensity + 1);
+                            double offsetY = random.Next(-shakeIntensity, shakeIntensity + 1);
+
+                            window.Left = originalLeft + offsetX;
+                            window.Top = originalTop + offsetY;
+
+                            System.Threading.Thread.Sleep(shakeDuration);
+                        }
+
+                        // Återställ fönstrets position efter skakningen
+                        window.Left = originalLeft;
+                        window.Top = originalTop;
                     }
-
-                    // Återställ fönstrets position efter skakningen
-                    window.Left = originalLeft;
-                    window.Top = originalTop;
-                }
-
+                });
             }
-            else if (prop == "connectDecline")
+            else if (prop == "Declined")
             {
                 MessageBox.Show("Listener declined your invitation");
                 Status = "Not connected";
             }
-            else if (prop == "connectAccept")
+            else if (prop == "Connected")
             {
                 Status = "Connected";
+                ViewTabId = 1;
             }
         }
     }
