@@ -7,30 +7,14 @@ using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class SendMessageCommand : ICommand
+    internal class SendMessageCommand : BaseCommand
     {
-        public event EventHandler? CanExecuteChanged;
-        private MainViewModel _main;
 
-        public MainViewModel Main
-        {
-            get { return _main; }
-            set { _main = value; }
-        }
+        public SendMessageCommand(MainViewModel main) : base(main) { }
 
-        public SendMessageCommand(MainViewModel main)
+        public override void Execute(object? parameter)
         {
-            this.Main = main;
-        }
-
-        public bool CanExecute(object? parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object? parameter)
-        {
-            Main.SendMessage();
+            _main.SendMessage();
         }
     }
 }

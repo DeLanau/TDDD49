@@ -32,20 +32,20 @@ namespace ChatApp.ViewModel
 
         private string searchText;
 
-        private ConnectionManager _connection;
-        private DataManager _dataManager;
+        private ConnectionManager Connection { get; set; }
+        private DataManager DataManager { get; set; }
 
         private MessageInfo _latestMsg;
         private Chat _activeChat = null; //start with zero active chats
         private Thread thread;
 
-
-        private ICommand _listenercmd;
-        private ICommand _clientcmd;
-        private ICommand _sendmsgcmd;
-        private ICommand _sendbuzzcmd;
-        private ICommand _showchatcmd;
-        private ICommand _searchcmd;
+        //commands
+        public ICommand ListenerCmd { get; set; }
+        public ICommand ClientCmd { get; set; }
+        public ICommand SendMsgCmd { get; set; }
+        public ICommand SendBuzzCmd { get; set; }
+        public ICommand ShowChatCmd { get; set; }
+        public ICommand SearchCmd { get; set; }
 
         //update UI
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -60,11 +60,6 @@ namespace ChatApp.ViewModel
         public List<Chat>? OldChat { get; set; }
         public ObservableCollection<Chat>? ObservableSearchChat { get; set; }
         public ObservableCollection<MessageInfo>? ObservableOldChat { get; set; }
-        public ConnectionManager Connection
-        {
-            get { return _connection; }
-            set { _connection = value; }
-        }
 
         private int _viewTabId = 0;
         public int ViewTabId
@@ -94,7 +89,6 @@ namespace ChatApp.ViewModel
             set
             {
                 status = value;
-
                 OnPropertyChanged();
             }
         }
@@ -142,55 +136,10 @@ namespace ChatApp.ViewModel
             get { return _activeChat; }
             set { _activeChat = value; }
         }
-
         public string SearchText
         {
             get { return searchText; }
             set { searchText = value; }
-        }
-
-        public DataManager DataManager
-        {
-            get { return _dataManager; }
-            set { _dataManager = value; }
-        }
-
-        public ICommand ListenerCmd
-        {
-            get { return _listenercmd; }
-            set { _listenercmd = value; }
-        }
-
-        public ICommand ClientCmd
-        { 
-            get { return _clientcmd; } 
-            set { _clientcmd = value; }
-        }
-
-        public ICommand SendMsgCmd
-        {
-            get { return _sendmsgcmd; }
-            set { _sendmsgcmd = value; }
-        }
-
-        public ICommand SendBuzzCmd
-        {
-            get { return _sendbuzzcmd; }
-            set { _sendbuzzcmd = value; }
-        }
-
-        public ICommand ShowChatCmd
-        {
-            get { return _showchatcmd; }
-            set {
-                _showchatcmd = value;
-            }
-        }
-
-        public ICommand SearchCmd
-        {
-            get { return _searchcmd; }
-            set { _searchcmd = value; }
         }
 
         public MainViewModel()
@@ -203,17 +152,11 @@ namespace ChatApp.ViewModel
 
             this.DataManager = new DataManager();
             this.Connection = new ConnectionManager();
-            this.ListenerCmd = new ListenerCommand(this);
-            this.ClientCmd = new ClientCommand(this);
-            this.SendMsgCmd = new SendMessageCommand(this);
-            this.SendBuzzCmd = new SendBuzzCommand(this);
-            this.ShowChatCmd = new ShowChatCommand(this);
-            this.SearchCmd = new SearchCommand(this);
+           
+            InitCommands();
 
-            this.ObservableMessage = new ObservableCollection<MessageInfo>();
-            this.OldChat = new List<Chat>(GetHistory());
-            this.ObservableOldChat = new ObservableCollection<MessageInfo>();
-            this.ObservableSearchChat = new ObservableCollection<Chat>(OldChat);
+            InitObservables();
+
             this.Connection.PropertyChanged += updateProperty;
 
             Port = "3000";
@@ -221,6 +164,25 @@ namespace ChatApp.ViewModel
 
             if (OldChat.Count >= 0)
                 DisplayChat(DataManager.GetHistory().First());
+        }
+
+        //startup
+        private void InitCommands()
+        {
+            ListenerCmd = new ListenerCommand(this);
+            ClientCmd = new ClientCommand(this);
+            SendMsgCmd = new SendMessageCommand(this);
+            SendBuzzCmd = new SendBuzzCommand(this);
+            ShowChatCmd = new ShowChatCommand(this);
+            SearchCmd = new SearchCommand(this);
+        }
+
+        private void InitObservables()
+        {
+            ObservableMessage = new ObservableCollection<MessageInfo>();
+            OldChat = new List<Chat>(GetHistory());
+            ObservableOldChat = new ObservableCollection<MessageInfo>();
+            ObservableSearchChat = new ObservableCollection<Chat>(OldChat);
         }
 
         //listeners
@@ -240,8 +202,6 @@ namespace ChatApp.ViewModel
             thread = new Thread(new ThreadStart(Connection.ConnectListener));
             thread.IsBackground = true;
             thread.Start();
-
-            Status = "Connected";
         }
 
         private bool check_port()
@@ -391,7 +351,7 @@ namespace ChatApp.ViewModel
         private void updateProperty(object sender, PropertyChangedEventArgs e)
         {
             var prop = e.PropertyName;
-
+            
             if (e.PropertyName == "ReceivedMessage")
             {
                // System.Diagnostics.Debug.WriteLine("in switch");

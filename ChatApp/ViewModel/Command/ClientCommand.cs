@@ -8,30 +8,14 @@ using System.Windows.Input;
 
 namespace ChatApp.ViewModel.Command
 {
-    internal class ClientCommand : ICommand
+    internal class ClientCommand : BaseCommand
     {
-        public event EventHandler? CanExecuteChanged;
-        private MainViewModel _main;
+   
+        public ClientCommand(MainViewModel main) : base(main) { }
 
-        public MainViewModel Main
+        public override void Execute(object? parameter)
         {
-            get { return _main; }
-            set { _main = value; }
-        }
-
-        public ClientCommand(MainViewModel main)
-        {
-            this.Main = main;
-        }
-
-        public bool CanExecute(object? parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object? parameter)
-        {
-            Main.ConnectListener();
+            _main.ConnectListener();
         }
 
     }

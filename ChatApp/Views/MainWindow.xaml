@@ -19,7 +19,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type TabItem}">
                             <Border BorderBrush="#AFC8AD" BorderThickness="0" CornerRadius="7" Margin="4" Padding="3" Background="#AFC8AD">
-                                <ContentPresenter ContentSource="Header" TextElement.FontSize="18" TextElement.FontFamily="Arial"/>
+                                <ContentPresenter ContentSource="Header" TextElement.FontSize="18" TextElement.FontFamily="Arial" Cursor="Hand"/>
                             </Border>
                         </ControlTemplate>
                     </Setter.Value>

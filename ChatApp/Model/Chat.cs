@@ -9,42 +9,17 @@ namespace ChatApp.Model
     public class Chat
     {
 
-        private string name;
-        private string id;
-        private DateTime date;
-        private List<MessageInfo> messages;
-
-        public string Name
-        { 
-            get { return name; } 
-            set {  name = value; } 
-        }
-
-        public string Id
-        {
-            get { return id; }
-            set {  id = value; }
-        }
-
-        public DateTime Date
-        {
-            get { return date; }
-            set { date = value; }
-        }
-
-        public List<MessageInfo> Messages
-        {
-            get { return messages; }
-            set { messages = value; }
-        }
+        public string Name { get; private set; }
+        public string Id { get; private set; }
+        public DateTime Date { get; private set; }
+        public List<MessageInfo> Messages { get; private set; }
 
         public Chat(string name, MessageInfo message)
         {
-            messages = new List<MessageInfo>();
-            messages.Add(message);
-            this.Name = name;
-            this.Id = name + DateTime.Now.ToString("yyyyMMddHHmmss");
-            this.Date = DateTime.Now;
+            Messages = new List<MessageInfo>() { message };
+            Name = name;
+            Id = name + DateTime.Now.ToString("yyyyMMddHHmmss");
+            Date = DateTime.Now;
         }
     }
 }

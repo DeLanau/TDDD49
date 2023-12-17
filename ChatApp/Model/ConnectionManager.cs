@@ -32,9 +32,7 @@ namespace ChatApp.Model
         protected void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public string Port
@@ -67,7 +65,6 @@ namespace ChatApp.Model
             set 
             {  
                 inconnection = value;
-      
                 OnPropertyChanged("InConnection");
             }
         }
@@ -103,6 +100,10 @@ namespace ChatApp.Model
             }
         }
 
+        /**
+         * Message flow client/server
+         * **/
+
         public MessageInfo SendMessage(String msg)
         {
             MessageInfo j_msg = new MessageInfo()
@@ -126,18 +127,64 @@ namespace ChatApp.Model
                 stream.Write(bytes, 0, bytes.Length);
         }
 
-        private MessageInfo receivedMessage;
-        public MessageInfo ReceivedMessage
+        //listen stream of data for message. 
+        private void getMessage()
         {
-            get { return receivedMessage;}
-            set
+            try
             {
-                receivedMessage = value;
-                if (otheruser == "")
-                    Otheruser = receivedMessage.UserName;
-                OnPropertyChanged("ReceivedMessage");
+                while (connected)
+                {
+                    if (client == null)
+                        break;
+
+                    var datab = new Byte[256];
+                    stream = client.GetStream();
+                    Int32 bytes = stream.Read(datab);
+                    var msg = System.Text.Encoding.ASCII.GetString(datab, 0, bytes);
+
+                    if (bytes > 0)
+                    {
+                        receivedMessage = JsonSerializer.Deserialize<MessageInfo>(msg);
+                        string request_type = receivedMessage.RequestType;
+
+                        if (request_type == "message")
+                        {
+                            ReceivedMessage = receivedMessage;
+                        }
+                        else if (request_type == "InConnection")
+                        {
+                            otheruser = receivedMessage.UserName;
+                            InConnection = true;
+                        }
+                        else if (request_type == "connectDecline")
+                        {
+                            Declined = true;
+                        }
+                        else if (request_type == "buzz")
+                        {
+                            OnPropertyChanged("buzz");
+                        }
+                        else if (request_type == "connectAccept")
+                        {
+                            Connected = true;
+                        }
+                        stream.Flush();
+                    }
+                }
+            }
+            catch
+            {
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    Disconnected = true;
+                    CloseConnection();
+                });
             }
         }
+
+        /**
+         * TCP listener/client
+         * **/
 
         public void ConnectListener()
         {
@@ -195,57 +242,20 @@ namespace ChatApp.Model
             getMessage();
         }
 
-        //listen stream of data for message. 
-        private void getMessage()
+        /**
+         * Handle data from stream/send data to stream
+         * **/
+
+        private MessageInfo receivedMessage;
+        public MessageInfo ReceivedMessage
         {
-            try
+            get { return receivedMessage; }
+            set
             {
-               while(connected)
-                {
-                    if (client == null)
-                        break;
-
-                    var datab = new Byte[256];
-                    stream = client.GetStream();
-                    Int32 bytes = stream.Read(datab);
-                    var msg = System.Text.Encoding.ASCII.GetString(datab, 0, bytes);
-
-                    if(bytes > 0)
-                    {
-                        receivedMessage = JsonSerializer.Deserialize<MessageInfo>(msg);
-                        string request_type = receivedMessage.RequestType;
-
-                        if(request_type == "message")
-                        {
-                            ReceivedMessage = receivedMessage;
-                        }
-                        else if (request_type == "InConnection")
-                        {
-                            otheruser = receivedMessage.UserName;
-                            InConnection = true;
-                        }
-                        else if (request_type == "connectDecline")
-                        {
-                            Declined = true;
-                        }
-                        else if (request_type == "buzz")
-                        {
-                            OnPropertyChanged("buzz");
-                        }
-                        else if(request_type == "connectAccept")
-                        {
-                            Connected = true;
-                        }
-                        stream.Flush();
-                    }
-                }
-            }catch
-            {
-                App.Current.Dispatcher.Invoke((System.Action)delegate
-                {
-                    Disconnected = true;
-                    CloseConnection();
-                });
+                receivedMessage = value;
+                if (otheruser == "")
+                    Otheruser = receivedMessage.UserName;
+                OnPropertyChanged("ReceivedMessage");
             }
         }
 
@@ -276,6 +286,10 @@ namespace ChatApp.Model
             sendJsonMessage(msg);
             getMessage();
         }
+
+        /**
+         * Handle close/exit connection
+         * **/
 
         public void DeclineConnection()
         {

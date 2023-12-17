@@ -15,7 +15,7 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             TextElement.FontSize="18" TextElement.FontFamily="Arial"
-                            Margin="{TemplateBinding Padding}" ></ContentPresenter>
+                            Margin="{TemplateBinding Padding}" Cursor="Hand" ></ContentPresenter>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
