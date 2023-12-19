@@ -9,10 +9,10 @@ namespace ChatApp.Model
     public class Chat
     {
 
-        public string Name { get; private set; }
-        public string Id { get; private set; }
-        public DateTime Date { get; private set; }
-        public List<MessageInfo> Messages { get; private set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
+        public DateTime Date { get; set; }
+        public List<MessageInfo> Messages { get; set; }
 
         public Chat(string name, MessageInfo message)
         {

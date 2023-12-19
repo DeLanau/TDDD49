@@ -215,6 +215,39 @@ namespace ChatApp.Model
             }
         }
 
+        //fix messagebox && checkport start
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get { return _errorMessage; }
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged("ErrorMessage");
+            }
+        }
+
+        public async Task<bool> CheckPort()
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    TcpListener l = new TcpListener(IPAddress.Parse(Address), int.Parse(Port));
+                    l.Start();
+                    l.Stop();
+                });
+                ErrorMessage = "No server on this port";
+                return false;
+            }
+            catch (SocketException e)
+            {
+                return true;
+            }
+        }
+        //fix end
+
         //init listener to default port 127.0.0.1
         public void InitListener()
         {
@@ -228,12 +261,10 @@ namespace ChatApp.Model
             }
             catch (SocketException e)
             {
-                MessageBox.Show(e.Message);
-
-               
+                
                 otheruser = "";
-
                 listener.Stop();
+                ErrorMessage = e.Message;
             }
             finally
             {

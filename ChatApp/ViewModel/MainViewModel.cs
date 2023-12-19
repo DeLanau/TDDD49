@@ -16,6 +16,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ChatApp.Model;
 using ChatApp.ViewModel.Command;
+using Microsoft.VisualBasic;
 
 namespace ChatApp.ViewModel
 {
@@ -145,14 +146,13 @@ namespace ChatApp.ViewModel
         public MainViewModel()
         {
 
-            if (!Directory.Exists("ChatData"))
-                Directory.CreateDirectory("ChatData");
-
             Status = "Not Connected";
 
             DataManager = new DataManager();
             Connection = new ConnectionManager();
-           
+
+            DataManager.Init();
+
             InitCommands();
 
             InitObservables();
@@ -187,35 +187,18 @@ namespace ChatApp.ViewModel
 
         //listeners
 
-        public void ConnectListener()
+        public async void ConnectListener()
         {
             ObservableMessage.Clear();
             Status = "Connecting";
 
-            if (!check_port())
-            {
-                Status = "Not Connected";
-                MessageBox.Show("No server on this port");
+            if (!await Connection.CheckPort())
                 return;
-            }
+           
 
             thread = new Thread(new ThreadStart(Connection.ConnectListener));
             thread.IsBackground = true;
             thread.Start();
-        }
-
-        private bool check_port()
-        {
-            try
-            {
-                TcpListener l = new TcpListener(IPAddress.Parse(Address), int.Parse(Port));
-                l.Start();
-                l.Stop();
-                return false;
-            } catch (SocketException e)
-            {
-                return true;
-            }
         }
 
         public void InitListener()
@@ -270,10 +253,10 @@ namespace ChatApp.ViewModel
         public void SearchChat()
         {
             IEnumerable<Chat> chatList = OldChat
-                .Where(c => c.Name.IndexOf(SearchText, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(c => c.Name.IndexOf(SearchText, StringComparison.OrdinalIgnoreCase) >= 0)
                 .OrderByDescending(c => c.Date);
-            
-            ObservableSearchChat.Clear();
+                
+                ObservableSearchChat.Clear();
 
             App.Current.Dispatcher.Invoke((System.Action)delegate
             {
@@ -351,10 +334,10 @@ namespace ChatApp.ViewModel
         private void updateProperty(object sender, PropertyChangedEventArgs e)
         {
             var prop = e.PropertyName;
-            
+            //System.Diagnostics.Debug.WriteLine(prop);
             if (prop == "ReceivedMessage")
             {
-               // System.Diagnostics.Debug.WriteLine("in switch");
+               // 
                 ReceivedMessage();
                 Status = "Connected";
             }
@@ -425,6 +408,13 @@ namespace ChatApp.ViewModel
             {
                 Status = "Connected";
                 ViewTabId = 1;
+            }else if (prop == "ErrorMessage")
+            {
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                { 
+                    MessageBox.Show(Connection.ErrorMessage);
+                    Status = "Not connected";
+                });
             }
         }
     }

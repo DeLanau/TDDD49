@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,13 @@ namespace ChatApp.Model
 {
     public class DataManager
     {
+
+        public void Init()
+        {
+            if (!Directory.Exists("ChatData"))
+                Directory.CreateDirectory("ChatData");
+        }
+
         public void UpdateChat(Chat chat)
         {
             string jsonObj = JsonConvert.SerializeObject(chat, Formatting.Indented); //format with indented for human-readable
@@ -24,10 +32,12 @@ namespace ChatApp.Model
             foreach (string file in chatFiles)
             {
                 var jsonString = File.ReadAllText(file);
-                var jsonObj = JsonConvert.DeserializeObject<Chat>(jsonString);
+
+                Chat jsonObj = JsonConvert.DeserializeObject<Chat>(jsonString);
                 sortedchats.Add(jsonObj);
             }
-            return sortedchats.OrderByDescending(e => e.Date).ToList();
+            
+            return sortedchats.OrderByDescending(o => o.Date).ToList();
         }
     }
 }
