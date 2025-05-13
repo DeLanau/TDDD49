@@ -1,4 +1,1 @@
-* Länkar till videos
-[[./videos/Showcase.mp4][Showcase]]
 
-[[./videos/code_walkthrough.mp4][Code walktrough]]
